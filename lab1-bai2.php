@@ -1,119 +1,177 @@
 <?php
-
 session_start();
 
-if (!isset($_SESSION['products'])) {
-
-    $_SESSION['products'] = [
-
-        [
-            "id" => 1,
-            "name" => "Hồ Điệp Và Kình Ngư",
-            "price" => 104000,
-            "image" => "https://cdn1.fahasa.com/media/catalog/product/b/i/bia-2d_ho-diep-va-kinh-ngu_17307.jpg"
-        ],
-
-        [
-            "id" => 2,
-            "name" => "Sứ Mệnh Hail Mary - Project Hail Mary",
-            "price" => 136000,
-            "image" => "https://cdn1.fahasa.com/media/catalog/product/b/_/b_a-1_7_12.jpg"
-        ],
-
-        [
-            "id" => 3,
-            "name" => "Người Đàn Ông Mang Tên OVE (Tái Bản)",
-            "price" => 115200,
-            "image" => "https://cdn1.fahasa.com/media/catalog/product/8/9/8934974182375.jpg"
-        ]
-
-    ];
-
+if (!isset($_SESSION['books'])) {
+    $_SESSION['books'] = [];
 }
 
-if (
-    !empty($_POST) &&
-    $_SERVER['REQUEST_METHOD'] == "POST"
-) {
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-    $name  = $_POST['name'];
+    $name = $_POST['name'];
     $price = $_POST['price'];
     $image = $_POST['image'];
 
-    $id = count($_SESSION['products']) + 1;
+    $id = count($_SESSION['books']) + 1;
 
-    $_SESSION['products'][] = [
-
-        "id"    => $id,
-        "name"  => $name,
+    $_SESSION['books'][] = [
+        "id" => $id,
+        "name" => $name,
         "price" => $price,
         "image" => $image
-
     ];
-
 }
-
 ?>
 
-<form action="" method="POST">
+<!DOCTYPE html>
+<html lang="vi">
 
-    <input
-        type="text"
-        name="name"
-        placeholder="Nhập tên sách"
-    >
+<head>
+    <meta charset="UTF-8">
+    <title>Shop Sách Online</title>
 
-    <br><br>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <input
-        type="number"
-        name="price"
-        placeholder="Nhập giá"
-    >
+    <style>
+        body {
+            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
 
-    <br><br>
+        .title {
+            text-align: center;
+            color: #d63384;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
 
-    <input
-        type="text"
-        name="image"
-        placeholder="Nhập link ảnh"
-    >
+        .form-box {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+        }
 
-    <br><br>
+        .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
 
-    <button type="submit">
-        Gửi đi
-    </button>
+        .card:hover {
+            transform: translateY(-5px);
+        }
 
-</form>
+        .card img {
+            height: 300px;
+            object-fit: cover;
+        }
 
-<hr>
+        .book-name {
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 50px;
+        }
 
-<?php foreach ($_SESSION['products'] as $product): ?>
+        .price {
+            color: red;
+            font-size: 20px;
+            font-weight: bold;
+        }
 
-    <div
-        style="
-            border:1px solid #ccc;
-            width:250px;
-            padding:10px;
-            margin-bottom:20px;
-        "
-    >
+        .btn-add {
+            background: #d63384;
+            border: none;
+        }
 
-        <img
-            src="<?= $product['image'] ?>"
-            width="200"
-        >
+        .btn-add:hover {
+            background: #b0256b;
+        }
+    </style>
+</head>
 
-        <h3>
-            <?= $product['name'] ?>
-        </h3>
+<body>
 
-        <p>
-            Giá:
-            <?= number_format($product['price']) ?> đ
-        </p>
+<div class="container py-5">
+
+    <h2 class="title">
+        SHOP SÁCH ONLINE
+    </h2>
+
+    <div class="form-box shadow-sm mb-5">
+
+        <h4 class="mb-4">Thêm sách mới</h4>
+
+        <form method="POST" class="row g-3">
+
+            <div class="col-md-4">
+                <input type="text"
+                       name="name"
+                       class="form-control"
+                       placeholder="Tên sách"
+                       required>
+            </div>
+
+            <div class="col-md-3">
+                <input type="number"
+                       name="price"
+                       class="form-control"
+                       placeholder="Giá sách"
+                       required>
+            </div>
+
+            <div class="col-md-4">
+                <input type="text"
+                       name="image"
+                       class="form-control"
+                       placeholder="URL ảnh bìa sách"
+                       required>
+            </div>
+
+            <div class="col-md-1">
+                <button class="btn btn-add text-white w-100">
+                    Thêm
+                </button>
+            </div>
+
+        </form>
 
     </div>
 
-<?php endforeach; ?>
+    <div class="row">
+
+        <?php foreach($_SESSION['books'] as $book): ?>
+
+            <div class="col-md-4 mb-4">
+
+                <div class="card shadow-sm h-100">
+
+                    <img src="<?= $book['image'] ?>" class="card-img-top">
+
+                    <div class="card-body d-flex flex-column">
+
+                        <h5 class="book-name">
+                            <?= $book['name'] ?>
+                        </h5>
+
+                        <p class="price mt-auto">
+                            <?= number_format($book['price']) ?> VNĐ
+                        </p>
+
+                        <button class="btn btn-outline-danger w-100">
+                            Mua ngay
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        <?php endforeach; ?>
+
+    </div>
+
+</div>
+
+</body>
+</html>
